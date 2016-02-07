@@ -1,4 +1,9 @@
+// Initialize interval to center eyes
+var centering = setInterval(centerEyes, 15000);
+// Mouse move eye follow
 $(document).on("mousemove", function(e) {
+  // On mouse move, clear interval
+  clearInterval(centering);
   $(".pupil").each(function() {
     var x = e.pageX, // Page x
         y = e.pageY; // Page y
@@ -26,7 +31,10 @@ $(document).on("mousemove", function(e) {
       "top": top + "px"
     })
   });
+  // Reset 15 second interval
+  centering = setInterval(centerEyes, 15000);
 });
+// Center Eye function
 var centerEyes = function() {
   $(".pupil").each(function() {
     var margin_left = -15,
@@ -37,4 +45,3 @@ var centerEyes = function() {
     })
   });
 }
-var centering = setInterval(centerEyes, 15000);
