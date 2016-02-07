@@ -21,10 +21,20 @@ $(document).on("mousemove", function(e) {
     var top = (pupil.y < y) ? 5 : -5;
     var margin_left = -15 + left,
         top = 10 + top;
-    console.log(margin_left, top);
     $(this).css({
-      "margin-left": margin_left,
+      "margin-left": margin_left + "px",
       "top": top + "px"
     })
   });
 });
+var centerEyes = function() {
+  $(".pupil").each(function() {
+    var margin_left = -15,
+        top = 10;
+    $(this).css({
+      "margin-left": margin_left + "px",
+      "top": top + "px"
+    })
+  });
+}
+var centering = setInterval(centerEyes, 15000);
