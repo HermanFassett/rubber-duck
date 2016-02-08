@@ -1,10 +1,9 @@
 // Initialize interval to center eyes
-var centering = setInterval(centerEyes, 15000), followMouse = true, timeout;
+var centering = setInterval(centerEyes, 15000), followMouse = true, timeout, scale = 1;
 
 // Load size
 $(document).ready(function() {
-  var scale = localStorage.duckScale || 1;
-  console.log(scale);
+  scale = parseFloat(localStorage.duckScale) || 1;
   $(".duck").css("transform", "translate(-50%, -50%) scale(" + scale + ", " + scale + ")")
 });
 // Mouse move eye follow
@@ -50,31 +49,28 @@ var mouseFollow = function(e) {
 
 // Zoom button
 $(".zoom").each(function() {
-  $(this).mousedown(function() {
-    var self = this;
-    zoomDuck(self, 0.1);
-    timeout = setInterval(function() { zoomDuck(self, 0.5) }, 100);
-    function zoomDuck(inp, amount) {
-      // Get transform property (comes in form matrix())
-      var transform = $(".duck").css("transform");
-      // Regex
-      var re = /matrix\(([\d\.]+)/;
-      // Tacky lookbehind
-      var scale = re.exec(transform);
-      if (!scale) scale = .1; // Sometimes when too small null
-      else scale = scale[1]; // (here's the tacky lookbehind part)
-      // If zoom in button, increase scale by amount
-      if ($(inp).hasClass("in")) scale = parseFloat(scale) + amount;
-      // If zoom out, decrease by amount
-      else scale = parseFloat(scale) - amount;
-      scale = parseInt(scale * 1000) / 1000; // Slight round off
-      // Transform
-      $(".duck").css("transform", "translate(-50%, -50%) scale(" + scale + ", " + scale + ")")
-      localStorage.duckScale = scale;
-    }
+  function zoomDuck(inp) {
+    if ($(inp).hasClass("in")) scale += 0.1;
+    // If zoom out, decrease by amount
+    else if (scale > 0.1) scale -= 0.1;
+    if (scale < 0) scale = 0;
+    scale = parseInt(scale * 1000) / 1000;
+    console.log(scale);
+    // Transform
+    $(".duck").css("transform", "translate(-50%, -50%) scale(" + scale + ", " + scale + ")")
+  }
+  $(this).click(function(e) {
+    zoomDuck(this);
   });
-  $(this).mouseup(function() {
+  $(this).mousedown(function(event) {
+    var self = this;
+    timeout = setInterval(function() { zoomDuck(self) }, 100);
+  });
+  $(this).mouseup(function(event) {
+    // Clear scaling interval
     clearInterval(timeout);
+    // Save size
+    localStorage.duckScale = scale;
     return false;
   })
 });
