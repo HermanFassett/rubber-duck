@@ -65,36 +65,46 @@ $(".zoom").each(function() {
 
 // Toggle button
 $(".toggle").click(function() {
-  // Change follow mouse state
-  followMouse = !followMouse;
-  if ($(this).hasClass("fa-toggle-on")) {
-    // Remove animations
-    $(".eye").each(function() {
-      $(this).css("animation", "none");
-    });
-    $(".pupil").each(function() {
-      $(this).css("animation", "none");
-    });
-    // Remove link
-    $("#body-link").removeAttr("href target");
-    // Center eyes
-    centerEyes();
+  if ($(this).hasClass("fa-check-square-o")) {
+    if ($(this).text().match(/blink/i)) {
+      // Remove animations
+      $(".eye").each(function() {
+        $(this).css("animation", "none");
+      });
+      $(".pupil").each(function() {
+        $(this).css("animation", "none");
+      });
+    }
+    else if ($(this).text().match(/link/i)) {
+      // Remove link
+      $("#body-link").removeAttr("href target");
+    }
+    else {
+      followMouse = false;
+      // Center eyes
+      centerEyes();
+    }
     // Change icon
-    $(this).removeClass("fa-toggle-on").addClass("fa-toggle-off");
+    $(this).removeClass("fa-check-square-o").addClass("fa-square-o");
   }
   else {
-    // Add animations
-    $(".eye").each(function() {
-      $(this).css("animation", "eyes 5s infinite step-start 0s");
-    });
-    $(".pupil").each(function() {
-      $(this).css("animation", "pupil 5s infinite step-start 0s");
-    });
-    // Add link
-    $("#body-link").attr("href", "http://www.rubberduckdebugging.com/");
-    $("#body-link").attr("target", "_blank");
+    if ($(this).text().match(/blink/i)) {
+      // Add animations
+      $(".eye").each(function() {
+        $(this).css("animation", "eyes 5s infinite step-start 0s");
+      });
+      $(".pupil").each(function() {
+        $(this).css("animation", "pupil 5s infinite step-start 0s");
+      });
+    }
+    else if ($(this).text().match(/link/i)) {
+      // Add link
+      $("#body-link").attr("href", "http://www.rubberduckdebugging.com/");
+      $("#body-link").attr("target", "_blank");
+    }
+    else followMouse = true;
     // Change icon
-    $(this).removeClass("fa-toggle-off").addClass("fa-toggle-on");
+    $(this).removeClass("fa-square-o").addClass("fa-check-square-o");
   }
 });
 // Center Eye function
