@@ -55,7 +55,6 @@ $(".zoom").each(function() {
     else if (scale > 0.1) scale -= 0.1;
     if (scale < 0) scale = 0;
     scale = parseInt(scale * 1000) / 1000;
-    console.log(scale);
     // Transform
     $(".duck").css("transform", "translate(-50%, -50%) scale(" + scale + ", " + scale + ")")
   }
