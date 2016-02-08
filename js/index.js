@@ -1,7 +1,14 @@
 // Initialize interval to center eyes
-var centering = setInterval(centerEyes, 15000);
+var centering = setInterval(centerEyes, 15000), followMouse = true;
+
 // Mouse move eye follow
 $(document).on("mousemove", function(e) {
+  // If mouse follow is enabled
+  if (followMouse) mouseFollow(e);
+});
+
+// Follow mouse
+var mouseFollow = function(e) {
   // On mouse move, clear interval
   clearInterval(centering);
   $(".pupil").each(function() {
@@ -33,6 +40,41 @@ $(document).on("mousemove", function(e) {
   });
   // Reset 15 second interval
   centering = setInterval(centerEyes, 15000);
+}
+
+// Toggle button
+$(".toggle").click(function() {
+  // Change follow mouse state
+  followMouse = !followMouse;
+  if ($(this).hasClass("fa-toggle-on")) {
+    // Remove animations
+    $(".eye").each(function() {
+      $(this).css("animation", "none");
+    });
+    $(".pupil").each(function() {
+      $(this).css("animation", "none");
+    });
+    // Remove link
+    $("#body-link").removeAttr("href target");
+    // Center eyes
+    centerEyes();
+    // Change icon
+    $(this).removeClass("fa-toggle-on").addClass("fa-toggle-off");
+  }
+  else {
+    // Add animations
+    $(".eye").each(function() {
+      $(this).css("animation", "eyes 5s infinite step-start 0s");
+    });
+    $(".pupil").each(function() {
+      $(this).css("animation", "pupil 5s infinite step-start 0s");
+    });
+    // Add link
+    $("#body-link").attr("href", "http://www.rubberduckdebugging.com/");
+    $("#body-link").attr("target", "_blank");
+    // Change icon
+    $(this).removeClass("fa-toggle-off").addClass("fa-toggle-on");
+  }
 });
 // Center Eye function
 var centerEyes = function() {
