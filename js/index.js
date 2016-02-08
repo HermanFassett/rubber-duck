@@ -1,6 +1,12 @@
 // Initialize interval to center eyes
 var centering = setInterval(centerEyes, 15000), followMouse = true;
 
+// Load size
+$(document).ready(function() {
+  var scale = localStorage.duckScale || 1;
+  console.log(scale);
+  $(".duck").css("transform", "translate(-50%, -50%) scale(" + scale + ", " + scale + ")")
+});
 // Mouse move eye follow
 $(document).on("mousemove", function(e) {
   // If mouse follow is enabled
@@ -60,6 +66,7 @@ $(".zoom").each(function() {
     scale = parseInt(scale * 1000) / 1000; // Slight round off
     // Transform
     $(".duck").css("transform", "translate(-50%, -50%) scale(" + scale + ", " + scale + ")")
+    localStorage.duckScale = scale;
   });
 });
 
