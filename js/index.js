@@ -1,5 +1,5 @@
 // Initialize interval to center eyes
-var centering = setInterval(centerEyes, 15000), followMouse = true;
+var centering = setInterval(centerEyes, 15000), followMouse = true, timeout;
 
 // Load size
 $(document).ready(function() {
@@ -50,24 +50,33 @@ var mouseFollow = function(e) {
 
 // Zoom button
 $(".zoom").each(function() {
-  $(this).click(function() {
-    // Get transform property (comes in form matrix())
-    var transform = $(".duck").css("transform");
-    // Regex
-    var re = /matrix\(([\d\.]+)/;
-    // Tacky lookbehind
-    var scale = re.exec(transform);
-    if (!scale) scale = .1; // Sometimes when too small null
-    else scale = scale[1]; // (here's the tacky lookbehind part)
-    // If zoom in button, increase scale by ~0.1
-    if ($(this).hasClass("in")) scale = parseFloat(scale) + 0.1;
-    // If zoom out, decrease by ~0.1
-    else scale = parseFloat(scale) - 0.1;
-    scale = parseInt(scale * 1000) / 1000; // Slight round off
-    // Transform
-    $(".duck").css("transform", "translate(-50%, -50%) scale(" + scale + ", " + scale + ")")
-    localStorage.duckScale = scale;
+  $(this).mousedown(function() {
+    var self = this;
+    zoomDuck(self, 0.1);
+    timeout = setInterval(function() { zoomDuck(self, 0.5) }, 100);
+    function zoomDuck(inp, amount) {
+      // Get transform property (comes in form matrix())
+      var transform = $(".duck").css("transform");
+      // Regex
+      var re = /matrix\(([\d\.]+)/;
+      // Tacky lookbehind
+      var scale = re.exec(transform);
+      if (!scale) scale = .1; // Sometimes when too small null
+      else scale = scale[1]; // (here's the tacky lookbehind part)
+      // If zoom in button, increase scale by amount
+      if ($(inp).hasClass("in")) scale = parseFloat(scale) + amount;
+      // If zoom out, decrease by amount
+      else scale = parseFloat(scale) - amount;
+      scale = parseInt(scale * 1000) / 1000; // Slight round off
+      // Transform
+      $(".duck").css("transform", "translate(-50%, -50%) scale(" + scale + ", " + scale + ")")
+      localStorage.duckScale = scale;
+    }
   });
+  $(this).mouseup(function() {
+    clearInterval(timeout);
+    return false;
+  })
 });
 
 // Toggle button
