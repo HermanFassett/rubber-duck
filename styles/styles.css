@@ -90,7 +90,7 @@ div {
   display: inline-block;
   position: absolute;
   top: 10px;
-  margin-left:-15px;
+  margin-left:-17px;
   z-index: 4;
   animation: pupil 5s infinite step-start 0s;
 }

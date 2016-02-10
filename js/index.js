@@ -1,8 +1,13 @@
 // Initialize interval to center eyes
 var centering = setInterval(centerEyes, 15000), followMouse = true, timeout, scale = 1;
+var default_left = -17, default_top = 10; // Center in non IE
 
 // Load size
 $(document).ready(function() {
+  if (navigator.userAgent.match(/msie|trident/i)) {
+    default_left = 0;//, default_top = 0; // Centering eyes in IE
+    centerEyes();
+  }
   scale = parseFloat(localStorage.duckScale) || 1;
   $(".duck").css("transform", "translate(-50%, -50%) scale(" + scale + ", " + scale + ")")
 });
@@ -36,8 +41,8 @@ var mouseFollow = function(e) {
     }
     var left = (pupil.x < x) ? 5 : -5;
     var top = (pupil.y < y) ? 5 : -5;
-    var margin_left = -15 + left,
-        top = 10 + top;
+    var margin_left = default_left + left,
+        top = default_top + top;
     $(this).css({
       "margin-left": margin_left + "px",
       "top": top + "px"
@@ -121,8 +126,8 @@ $(".toggle").click(function() {
 // Center Eye function
 var centerEyes = function() {
   $(".pupil").each(function() {
-    var margin_left = -15,
-        top = 10;
+    var margin_left = default_left,
+        top = default_top;
     $(this).css({
       "margin-left": margin_left + "px",
       "top": top + "px"
